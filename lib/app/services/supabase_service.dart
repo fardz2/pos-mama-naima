@@ -31,6 +31,20 @@ class SupabaseService extends GetxController {
     }
   }
 
+  Future<void> editProduct(
+      int id, String name, String image, int price, String barcode) async {
+    try {
+      await supabaseClient.from('products').update({
+        'name': name,
+        'image': image,
+        'price': price,
+        'barcode': barcode
+      }).eq('id', id);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   Future<void> deleteProduct(int id) async {
     await supabaseClient.from('products').delete().eq('id', id);
   }

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -9,10 +10,10 @@ import 'package:poin_of_sale_mama_naima/app/widgets/custom_appbar.dart';
 import 'package:poin_of_sale_mama_naima/app/widgets/textfield_custom.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 
-import '../controllers/add_product_controller.dart';
+import '../controllers/edit_product_controller.dart';
 
-class AddProductView extends GetView<AddProductController> {
-  const AddProductView({super.key});
+class EditProductView extends GetView<EditProductController> {
+  const EditProductView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +22,7 @@ class AddProductView extends GetView<AddProductController> {
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Column(
             children: [
-              const CustomAppBar(title: 'Tambah Produk'),
+              const CustomAppBar(title: 'Edit Produk'),
               Expanded(
                 child: SingleChildScrollView(
                   child: Form(
@@ -61,11 +62,8 @@ class AddProductView extends GetView<AddProductController> {
                                     onTap: () async {
                                       await controller.getImage(true);
                                     },
-                                    child: const Icon(
-                                      Icons.camera_alt,
-                                      size: 30,
-                                      color: Colors.white,
-                                    ),
+                                    child: CachedNetworkImage(
+                                        imageUrl: controller.imageUrl.value),
                                   ),
                           );
                         }),
@@ -149,7 +147,7 @@ class AddProductView extends GetView<AddProductController> {
                                       ),
                                     )
                                   : const Text(
-                                      "Tambah",
+                                      "Edit",
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 17,

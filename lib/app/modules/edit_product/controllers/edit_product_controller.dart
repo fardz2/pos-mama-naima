@@ -1,21 +1,32 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
+
 import 'package:image_picker/image_picker.dart';
 import 'package:poin_of_sale_mama_naima/app/routes/app_pages.dart';
 import 'package:poin_of_sale_mama_naima/app/services/supabase_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class AddProductController extends GetxController {
+class EditProductController extends GetxController {
+  final argument = Get.arguments;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final name = TextEditingController();
   final price = TextEditingController();
   final imageProduct = XFile("").obs;
   final barcode = ''.obs;
+  final imageUrl = ''.obs;
+  final idProduct = 0.obs;
   final isLoading = false.obs;
   final supabaseService = Get.put(SupabaseService());
+
+  @override
+  void onInit() {
+    name.text = argument.name;
+    price.text = argument.price.toString();
+    barcode.value = argument.barcode;
+    imageUrl.value = argument.image;
+    idProduct.value = argument.id;
+    super.onInit();
+  }
 
   Future getImage(bool gallery) async {
     ImagePicker picker = ImagePicker();
@@ -29,7 +40,6 @@ class AddProductController extends GetxController {
     }
   }
 
-  // untuk mengupload gambar ke firebase storage
   Future<String> uploadImage(XFile image) async {
     final storage = supabaseService.supabaseClient.storage.from('mama_naima');
     final fileExt = image.path.split('.').last;
@@ -47,36 +57,45 @@ class AddProductController extends GetxController {
 
   void submit() async {
     if (formKey.currentState!.validate()) {
-      if (imageProduct.value.path == "") {
-        Get.snackbar(
-          "Peringatan",
-          "Gambar produk belum dipilih",
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
-      } else {
-        isLoading.value = true;
-        try {
-          String url = await uploadImage(imageProduct.value);
-          print(url);
-          supabaseService.addProduct(
-              name.text, url, int.parse(price.text), barcode.value);
+      try {
+        isLoading.value =
+            true; // Pindahkan ini ke awal untuk memastikan loading selalu diset
+        if (imageProduct.value.path == "") {
+          await supabaseService.editProduct(idProduct.value, name.text,
+              imageUrl.value, int.parse(price.text), barcode.value);
           Get.snackbar(
             "Sukses",
-            "Data produk ${name.text} berhasil ditambahkan",
+            "Data produk ${name.text} berhasil diedit",
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.green,
             colorText: Colors.white,
           );
-          name.clear();
-          price.clear();
-          imageProduct.value = XFile("");
-          isLoading.value = false;
-          Get.offAllNamed(Routes.LANDING);
-        } catch (e) {
-          print(e.toString());
+        } else {
+          String url = await uploadImage(imageProduct.value);
+          await supabaseService.editProduct(idProduct.value, name.text, url,
+              int.parse(price.text), barcode.value);
+          Get.snackbar(
+            "Sukses",
+            "Data produk ${name.text} berhasil diedit",
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.green,
+            colorText: Colors.white,
+          );
         }
+      } catch (e) {
+        Get.snackbar(
+          "Error",
+          e.toString(),
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      } finally {
+        name.clear();
+        price.clear();
+        imageProduct.value = XFile("");
+        isLoading.value = false;
+        Get.offAllNamed(Routes.LANDING);
       }
     }
   }

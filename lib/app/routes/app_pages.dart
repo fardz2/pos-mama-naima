@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import '../modules/add_product/bindings/add_product_binding.dart';
 import '../modules/add_product/views/add_product_view.dart';
 import '../modules/cart_product/views/cart_product_view.dart';
+import '../modules/edit_product/bindings/edit_product_binding.dart';
+import '../modules/edit_product/views/edit_product_view.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/info/bindings/info_binding.dart';
 import '../modules/info/views/info_view.dart';
@@ -46,6 +48,11 @@ class AppPages {
       name: _Paths.PAYMENT,
       page: () => const PaymentView(),
       binding: PaymentBinding(),
+    ),
+    GetPage(
+      name: _Paths.EDIT_PRODUCT,
+      page: () => const EditProductView(),
+      binding: EditProductBinding(),
     ),
   ];
 }

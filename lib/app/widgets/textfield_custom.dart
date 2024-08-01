@@ -8,16 +8,17 @@ class TextFieldCustom extends StatelessWidget {
   final Widget? suffixIcon;
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final TextInputType? keyboardType;
   final String? initialValue;
   final bool? enabled;
+  final Widget? suffix;
 
   const TextFieldCustom(
       {super.key,
       required this.label,
       this.hintText,
-      required this.controller,
+      this.controller,
       required this.obscureText,
       this.suffixIcon,
       this.validator,
@@ -25,7 +26,8 @@ class TextFieldCustom extends StatelessWidget {
       this.fontWeight,
       this.initialValue,
       this.enabled,
-      this.onChanged});
+      this.onChanged,
+      this.suffix});
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +52,7 @@ class TextFieldCustom extends StatelessWidget {
           onChanged: onChanged,
           decoration: InputDecoration(
             suffixIcon: suffixIcon,
+            suffix: suffix,
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
             ),

@@ -1,13 +1,13 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
-import 'package:poin_of_sale_mama_naima/app/helper/format_harga.dart';
+
 import 'package:poin_of_sale_mama_naima/app/models/product_cart.dart';
 
 import 'package:poin_of_sale_mama_naima/app/routes/app_pages.dart';
 import 'package:poin_of_sale_mama_naima/app/widgets/product_card.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
+import 'package:badges/badges.dart' as badges;
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -76,7 +76,18 @@ class HomeView extends GetView<HomeController> {
                         onPressed: () {
                           Get.toNamed(Routes.CART_PRODUCT);
                         },
-                        icon: const Icon(IconsaxPlusLinear.shopping_cart),
+                        icon: Obx(() => controller.controllerCart.cart.isEmpty
+                            ? const Icon(IconsaxPlusLinear.shopping_cart)
+                            : badges.Badge(
+                                position: badges.BadgePosition.topEnd(top: -14),
+                                badgeContent: Text(
+                                  controller.controllerCart.cart.length
+                                      .toString(),
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                                child:
+                                    const Icon(IconsaxPlusLinear.shopping_cart),
+                              )),
                       )
                     ],
                   )
@@ -108,7 +119,8 @@ class HomeView extends GetView<HomeController> {
               Expanded(
                 child: Obx(() {
                   if (controller.isLoading.value) {
-                    return const Center(child: CircularProgressIndicator());
+                    return const Center(
+                        child: CircularProgressIndicator(color: Colors.black));
                   }
 
                   if (controller.products.isEmpty) {
@@ -133,18 +145,25 @@ class HomeView extends GetView<HomeController> {
                       ),
                       itemBuilder: (context, index) {
                         final product = controller.products[index];
-                        return ProductCard(
-                            product: product,
-                            onAddToCart: (product) {
-                              controller.controllerCart.addProduct(ProductCart(
-                                id: product.id,
-                                name: product.name,
-                                image: product.image,
-                                price: product.price,
-                                quantity: 1,
-                                barcode: product.barcode,
-                              ));
-                            });
+                        return GestureDetector(
+                          onTap: () => Get.toNamed(
+                            Routes.EDIT_PRODUCT,
+                            arguments: product,
+                          ),
+                          child: ProductCard(
+                              product: product,
+                              onAddToCart: (product) {
+                                controller.controllerCart
+                                    .addProduct(ProductCart(
+                                  id: product.id,
+                                  name: product.name,
+                                  image: product.image,
+                                  price: product.price,
+                                  quantity: 1,
+                                  barcode: product.barcode,
+                                ));
+                              }),
+                        );
                       },
                     ),
                   );
@@ -154,7 +173,7 @@ class HomeView extends GetView<HomeController> {
                 return controller.isLoadingMore.value
                     ? const Padding(
                         padding: EdgeInsets.all(8.0),
-                        child: CircularProgressIndicator(),
+                        child: CircularProgressIndicator(color: Colors.black),
                       )
                     : const SizedBox.shrink();
               }),
@@ -163,10 +182,11 @@ class HomeView extends GetView<HomeController> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.black,
         onPressed: () {
           Get.toNamed(Routes.ADD_PRODUCT);
         },
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }

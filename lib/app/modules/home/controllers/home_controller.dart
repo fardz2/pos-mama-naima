@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:poin_of_sale_mama_naima/app/models/Product.dart';
 import 'package:poin_of_sale_mama_naima/app/modules/cart_product/controllers/cart_product_controller.dart';
 import 'package:poin_of_sale_mama_naima/app/services/supabase_service.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class HomeController extends GetxController {
   final supabaseService = Get.put(SupabaseService());
@@ -21,7 +20,7 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _subscribeToProductChanges();
+
     loadInitialProducts(search.value);
   }
 
@@ -30,34 +29,6 @@ class HomeController extends GetxController {
     super.onClose();
     await supabaseService.supabaseClient.removeChannel(
         supabaseService.supabaseClient.channel('public:products'));
-  }
-
-  void _subscribeToProductChanges() {
-    supabaseService.supabaseClient
-        .channel('public:products')
-        .onPostgresChanges(
-            event: PostgresChangeEvent.insert,
-            schema: 'public',
-            table: 'products',
-            callback: (payload) {
-              loadInitialProducts(search.value);
-            })
-        .onPostgresChanges(
-            event: PostgresChangeEvent.delete,
-            schema: 'public',
-            table: 'products',
-            callback: (payload) {
-              products.removeWhere(
-                  (product) => product.id == payload.oldRecord["id"]);
-            })
-        .onPostgresChanges(
-            event: PostgresChangeEvent.update,
-            schema: 'public',
-            table: 'products',
-            callback: (payload) {
-              loadInitialProducts(search.value);
-            })
-        .subscribe();
   }
 
   void loadInitialProducts(String search) async {

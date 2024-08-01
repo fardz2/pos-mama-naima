@@ -22,7 +22,7 @@ class Product {
       name: map['name'],
       image: map['image'],
       price: map['price'],
-      barcode: map['barcode'],
+      barcode: map['barcode'] ?? '',
       createdAt: DateTime.parse(map['created_at']),
     );
   }
