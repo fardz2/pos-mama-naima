@@ -81,9 +81,6 @@ class EditProductView extends GetView<EditProductController> {
                         const SizedBox(
                           height: 10,
                         ),
-                        const SizedBox(
-                          height: 10,
-                        ),
                         TextFieldCustom(
                           label: "Harga *",
                           fontWeight: FontWeight.bold,
@@ -123,14 +120,17 @@ class EditProductView extends GetView<EditProductController> {
                         const SizedBox(
                           height: 10,
                         ),
+                        const SizedBox(
+                          height: 10,
+                        ),
                         SizedBox(
                           width: MediaQuery.of(context).size.width,
                           height: 44,
                           child: Obx(() {
                             return ElevatedButton(
                               onPressed: () async {
-                                if (!controller.isLoading.value) {
-                                  controller.submit();
+                                if (!controller.isLoadingEdit.value) {
+                                  controller.submit("edit");
                                 }
                               },
                               style: ElevatedButton.styleFrom(
@@ -140,7 +140,7 @@ class EditProductView extends GetView<EditProductController> {
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                               ),
-                              child: controller.isLoading.value
+                              child: controller.isLoadingEdit.value
                                   ? const CircularProgressIndicator(
                                       valueColor: AlwaysStoppedAnimation<Color>(
                                         Colors.white,
@@ -148,6 +148,68 @@ class EditProductView extends GetView<EditProductController> {
                                     )
                                   : const Text(
                                       "Edit",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                            );
+                          }),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          height: 44,
+                          child: Obx(() {
+                            return ElevatedButton(
+                              onPressed: () async {
+                                if (!controller.isLoadingDelete.value) {
+                                  bool confirmed = await showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: const Text("Konfirmasi"),
+                                        content: Text(
+                                            "Apakah Anda yakin ingin menghapus produk ${controller.argument.name} ini?"),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop(false);
+                                            },
+                                            child: const Text("Batal"),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop(true);
+                                            },
+                                            child: const Text("Hapus"),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+
+                                  if (confirmed) {
+                                    controller.submit("hapus");
+                                  }
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red, // background color
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              child: controller.isLoadingDelete.value
+                                  ? const CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white,
+                                      ),
+                                    )
+                                  : const Text(
+                                      "Hapus",
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 17,

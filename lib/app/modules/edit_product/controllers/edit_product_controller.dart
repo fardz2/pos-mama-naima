@@ -15,7 +15,8 @@ class EditProductController extends GetxController {
   final barcode = ''.obs;
   final imageUrl = ''.obs;
   final idProduct = 0.obs;
-  final isLoading = false.obs;
+  final isLoadingEdit = false.obs;
+  final isLoadingDelete = false.obs;
   final supabaseService = Get.put(SupabaseService());
 
   @override
@@ -55,48 +56,64 @@ class EditProductController extends GetxController {
     return imageUrl;
   }
 
-  void submit() async {
-    if (formKey.currentState!.validate()) {
-      try {
-        isLoading.value =
-            true; // Pindahkan ini ke awal untuk memastikan loading selalu diset
-        if (imageProduct.value.path == "") {
-          await supabaseService.editProduct(idProduct.value, name.text,
-              imageUrl.value, int.parse(price.text), barcode.value);
+  Future<void> editProduct(
+      int idProduct, String name, String url, int price, String barcode) async {
+    await supabaseService.editProduct(idProduct, name, url, price, barcode);
+  }
+
+  Future<void> deleteProduct(int idProduct) async {
+    await supabaseService.deleteProduct(idProduct);
+  }
+
+  void submit(String information) async {
+    if (information == "edit") {
+      if (formKey.currentState!.validate()) {
+        try {
+          isLoadingEdit.value =
+              true; // Pindahkan ini ke awal untuk memastikan loading selalu diset
+          if (imageProduct.value.path == "") {
+            await editProduct(idProduct.value, name.text, imageUrl.value,
+                int.parse(price.text), barcode.value);
+            Get.snackbar(
+              "Sukses",
+              "Data produk ${name.text} berhasil diedit",
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: Colors.green,
+              colorText: Colors.white,
+            );
+          } else {
+            String url = await uploadImage(imageProduct.value);
+            await editProduct(idProduct.value, name.text, url,
+                int.parse(price.text), barcode.value);
+            Get.snackbar(
+              "Sukses",
+              "Data produk ${name.text} berhasil diedit",
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: Colors.green,
+              colorText: Colors.white,
+            );
+          }
+        } catch (e) {
           Get.snackbar(
-            "Sukses",
-            "Data produk ${name.text} berhasil diedit",
+            "Error",
+            e.toString(),
             snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.green,
+            backgroundColor: Colors.red,
             colorText: Colors.white,
           );
-        } else {
-          String url = await uploadImage(imageProduct.value);
-          await supabaseService.editProduct(idProduct.value, name.text, url,
-              int.parse(price.text), barcode.value);
-          Get.snackbar(
-            "Sukses",
-            "Data produk ${name.text} berhasil diedit",
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.green,
-            colorText: Colors.white,
-          );
+        } finally {
+          name.clear();
+          price.clear();
+          imageProduct.value = XFile("");
+          isLoadingEdit.value = false;
+          Get.offAllNamed(Routes.LANDING);
         }
-      } catch (e) {
-        Get.snackbar(
-          "Error",
-          e.toString(),
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
-      } finally {
-        name.clear();
-        price.clear();
-        imageProduct.value = XFile("");
-        isLoading.value = false;
-        Get.offAllNamed(Routes.LANDING);
       }
+    } else {
+      isLoadingDelete.value = true;
+      await deleteProduct(idProduct.value);
+      isLoadingDelete.value = false;
+      Get.offAllNamed(Routes.LANDING);
     }
   }
 
