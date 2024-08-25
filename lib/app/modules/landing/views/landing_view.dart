@@ -25,8 +25,8 @@ class LandingView extends GetView<LandingController> {
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.business),
-              label: 'Business',
+              icon: Icon(IconsaxPlusBold.user),
+              label: 'Profile',
             ),
           ],
           currentIndex: controller.selectedIndex.value,

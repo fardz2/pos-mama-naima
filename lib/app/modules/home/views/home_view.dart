@@ -33,7 +33,8 @@ class HomeView extends GetView<HomeController> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text("Naima"),
+                  const Text("TokoNaima",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
                   Row(
                     children: [
                       IconButton(

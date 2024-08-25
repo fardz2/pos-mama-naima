@@ -86,29 +86,6 @@ class CartProductView extends StatelessWidget {
                                       controller.incrementQuantity(product));
                             },
                           ),
-                          SizedBox(
-                            width: MediaQuery.sizeOf(context).width,
-                            height: 44,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Get.toNamed(Routes.PAYMENT,
-                                    arguments: controller.totalPrice());
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.black,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                              ),
-                              child: Text(
-                                'Total Harga: ${FormatHarga.formatRupiah(controller.totalPrice())}',
-                                style: const TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white),
-                              ),
-                            ),
-                          ),
                         ],
                       ),
                     ),
@@ -116,6 +93,31 @@ class CartProductView extends StatelessWidget {
                 }
               }),
             ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        child: SizedBox(
+          width: MediaQuery.sizeOf(context).width,
+          height: 44,
+          child: ElevatedButton(
+            onPressed: () {
+              Get.toNamed(Routes.PAYMENT, arguments: controller.totalPrice());
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.black,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30),
+              ),
+            ),
+            child: Text(
+              'Total Harga: ${FormatHarga.formatRupiah(controller.totalPrice())}',
+              style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
+            ),
           ),
         ),
       ),

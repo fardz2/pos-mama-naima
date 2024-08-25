@@ -22,6 +22,7 @@ Future<void> main() async {
 
   runApp(
     GetMaterialApp(
+      debugShowCheckedModeBanner: false,
       localizationsDelegates: const [
         DefaultMaterialLocalizations.delegate,
         DefaultWidgetsLocalizations.delegate,
