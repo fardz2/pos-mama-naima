@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import 'package:poin_of_sale_mama_naima/app/modules/home/controllers/home_controller.dart';
 import 'package:poin_of_sale_mama_naima/app/modules/home/views/home_view.dart';
+import 'package:poin_of_sale_mama_naima/app/modules/info/controllers/info_controller.dart';
 import 'package:poin_of_sale_mama_naima/app/modules/info/views/info_view.dart';
 
 class LandingController extends GetxController {
@@ -15,6 +16,7 @@ class LandingController extends GetxController {
   void onInit() {
     super.onInit();
     Get.put(HomeController());
+    Get.put(InfoController());
   }
 
   void onItemTapped(int index) {

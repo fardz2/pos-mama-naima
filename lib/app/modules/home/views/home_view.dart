@@ -158,10 +158,10 @@ class HomeView extends GetView<HomeController> {
                                     .addProduct(ProductCart(
                                   id: product.id,
                                   name: product.name,
-                                  image: product.image,
-                                  price: product.price,
+                                  image: product.image.toString(),
+                                  price: int.parse(product.price.toString()),
                                   quantity: 1,
-                                  barcode: product.barcode,
+                                  barcode: product.barcode.toString(),
                                 ));
                               }),
                         );

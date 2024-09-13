@@ -24,7 +24,7 @@ class ProductCard extends StatelessWidget {
         children: [
           Expanded(
             child: CachedNetworkImage(
-              imageUrl: product.image,
+              imageUrl: product.image.toString(),
               imageBuilder: (context, imageProvider) => Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
@@ -65,7 +65,8 @@ class ProductCard extends StatelessWidget {
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
-                      Text(FormatHarga.formatRupiah(product.price)),
+                      Text(FormatHarga.formatRupiah(
+                          int.parse(product.price.toString()))),
                     ],
                   ),
                 ),

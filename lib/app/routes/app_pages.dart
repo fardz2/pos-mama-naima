@@ -3,10 +3,11 @@ import 'package:get/get.dart';
 import '../modules/add_product/bindings/add_product_binding.dart';
 import '../modules/add_product/views/add_product_view.dart';
 import '../modules/cart_product/views/cart_product_view.dart';
+import '../modules/detailTransaction/bindings/detail_transaction_binding.dart';
+import '../modules/detailTransaction/views/detail_transaction_view.dart';
 import '../modules/edit_product/bindings/edit_product_binding.dart';
 import '../modules/edit_product/views/edit_product_view.dart';
 import '../modules/home/views/home_view.dart';
-import '../modules/info/bindings/info_binding.dart';
 import '../modules/info/views/info_view.dart';
 import '../modules/landing/bindings/landing_binding.dart';
 import '../modules/landing/views/landing_view.dart';
@@ -33,7 +34,6 @@ class AppPages {
     GetPage(
       name: _Paths.INFO,
       page: () => const InfoView(),
-      binding: InfoBinding(),
     ),
     GetPage(
       name: _Paths.ADD_PRODUCT,
@@ -53,6 +53,11 @@ class AppPages {
       name: _Paths.EDIT_PRODUCT,
       page: () => const EditProductView(),
       binding: EditProductBinding(),
+    ),
+    GetPage(
+      name: _Paths.DETAIL_TRANSACTION,
+      page: () => const DetailTransactionView(),
+      binding: DetailTransactionBinding(),
     ),
   ];
 }

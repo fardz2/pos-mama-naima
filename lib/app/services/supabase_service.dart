@@ -1,11 +1,13 @@
 import 'package:get/get.dart';
+
 import 'package:poin_of_sale_mama_naima/app/models/Product.dart';
+import 'package:poin_of_sale_mama_naima/app/models/transaction.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseService extends GetxController {
   final SupabaseClient supabaseClient = Supabase.instance.client;
 
-  // User Collection CRUD
+  // Product Collection CRUD
 
   Future<List<Product>> getProducts(int page, String search,
       {int pageSize = 10}) async {
@@ -59,6 +61,40 @@ class SupabaseService extends GetxController {
       return Product.fromMap(response);
     } catch (e) {
       throw "qr code tidak ditemukan";
+    }
+  }
+
+  // Transaction Collection CRUD
+  Future<void> addTransaction(
+    List<Map<String, dynamic>> products,
+    int totalAmount,
+    String transactionCode,
+    int totalPayment,
+    int returnOfPayment,
+  ) async {
+    try {
+      await supabaseClient.from('transactions').insert({
+        "transaction_code": transactionCode,
+        "total_amount": totalAmount,
+        "total_payment": totalPayment,
+        "return_of_payment": returnOfPayment
+      });
+      await supabaseClient.from('transaction_items').insert(products);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<List<Transaction>> getTransactionItems() async {
+    try {
+      final response = await Supabase.instance.client
+          .from('transactions')
+          .select('*, transaction_items(qty,unit_price, products(id,name))')
+          .order('created_at', ascending: false);
+
+      return response.map((item) => Transaction.fromMap(item)).toList();
+    } catch (e) {
+      throw e;
     }
   }
 }
